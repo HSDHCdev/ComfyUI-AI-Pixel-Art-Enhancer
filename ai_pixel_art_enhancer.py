@@ -8,6 +8,7 @@ import math
 class AIPixelArtEnhancer:
     """
     ComfyUI Node for enhancing AI-generated pixel art with advanced processing options
+    Now supports batch processing for video frames
     """
     
     @classmethod
@@ -91,6 +92,7 @@ class AIPixelArtEnhancer:
                 }),
                 "preserve_details": ("BOOLEAN", {"default": True}),
                 "anti_aliasing": ("BOOLEAN", {"default": False}),
+                "batch_processing": ("BOOLEAN", {"default": True}),
             }
         }
     
@@ -103,14 +105,72 @@ class AIPixelArtEnhancer:
                          color_similarity_threshold, output_scale, enable_ai_enhancement=True,
                          noise_reduction=0.3, edge_enhancement=0.5, color_quantization=16,
                          dithering_strength=0.0, contrast_boost=1.0, saturation_boost=1.0,
-                         preserve_details=True, anti_aliasing=False):
+                         preserve_details=True, anti_aliasing=False, batch_processing=True):
         
-        # Convert ComfyUI tensor to PIL Image
-        if len(image.shape) == 4:
-            image = image[0]  # Remove batch dimension if present
+        # Handle batch processing
+        if len(image.shape) == 4 and batch_processing:
+            # Process each frame in the batch
+            batch_size = image.shape[0]
+            enhanced_frames = []
+            comparison_frames = []
+            
+            print(f"Processing {batch_size} frames...")
+            
+            for i in range(batch_size):
+                frame = image[i]  # Get individual frame
+                
+                # Process single frame
+                enhanced_frame, comparison_frame = self.process_single_frame(
+                    frame, grid_width, grid_height, conversion_method,
+                    color_similarity_threshold, output_scale, enable_ai_enhancement,
+                    noise_reduction, edge_enhancement, color_quantization,
+                    dithering_strength, contrast_boost, saturation_boost,
+                    preserve_details, anti_aliasing
+                )
+                
+                enhanced_frames.append(enhanced_frame)
+                comparison_frames.append(comparison_frame)
+                
+                # Progress indicator
+                if (i + 1) % 10 == 0 or i == 0:
+                    print(f"Processed frame {i + 1}/{batch_size}")
+            
+            # Stack frames back into batch tensors
+            enhanced_batch = torch.stack(enhanced_frames, dim=0)
+            comparison_batch = torch.stack(comparison_frames, dim=0)
+            
+            return (enhanced_batch, comparison_batch)
+        
+        else:
+            # Single image processing (legacy behavior)
+            if len(image.shape) == 4:
+                frame = image[0]  # Take first frame if batch with single frame
+            else:
+                frame = image
+            
+            enhanced_frame, comparison_frame = self.process_single_frame(
+                frame, grid_width, grid_height, conversion_method,
+                color_similarity_threshold, output_scale, enable_ai_enhancement,
+                noise_reduction, edge_enhancement, color_quantization,
+                dithering_strength, contrast_boost, saturation_boost,
+                preserve_details, anti_aliasing
+            )
+            
+            # Add batch dimension for consistency
+            enhanced_batch = enhanced_frame.unsqueeze(0)
+            comparison_batch = comparison_frame.unsqueeze(0)
+            
+            return (enhanced_batch, comparison_batch)
+    
+    def process_single_frame(self, frame, grid_width, grid_height, conversion_method, 
+                           color_similarity_threshold, output_scale, enable_ai_enhancement,
+                           noise_reduction, edge_enhancement, color_quantization,
+                           dithering_strength, contrast_boost, saturation_boost,
+                           preserve_details, anti_aliasing):
+        """Process a single frame/image"""
         
         # Convert from tensor [H, W, C] to numpy array
-        img_array = (image.cpu().numpy() * 255).astype(np.uint8)
+        img_array = (frame.cpu().numpy() * 255).astype(np.uint8)
         pil_image = Image.fromarray(img_array)
         
         # AI Enhancement preprocessing
@@ -151,9 +211,9 @@ class AIPixelArtEnhancer:
         # Create comparison grid
         comparison = self.create_comparison_grid(pil_image, pixel_art, final_image)
         
-        # Convert back to ComfyUI tensor format
-        enhanced_tensor = self.pil_to_tensor(final_image)
-        comparison_tensor = self.pil_to_tensor(comparison)
+        # Convert back to tensor format (without batch dimension)
+        enhanced_tensor = self.pil_to_tensor_single(final_image)
+        comparison_tensor = self.pil_to_tensor_single(comparison)
         
         return (enhanced_tensor, comparison_tensor)
     
@@ -525,8 +585,18 @@ class AIPixelArtEnhancer:
         
         return comparison
     
+    def pil_to_tensor_single(self, image):
+        """Convert PIL Image to tensor format without batch dimension"""
+        if image.mode != 'RGB':
+            image = image.convert('RGB')
+        
+        img_array = np.array(image).astype(np.float32) / 255.0
+        tensor = torch.from_numpy(img_array)
+        
+        return tensor
+    
     def pil_to_tensor(self, image):
-        """Convert PIL Image to ComfyUI tensor format"""
+        """Convert PIL Image to ComfyUI tensor format (legacy method with batch dimension)"""
         if image.mode != 'RGB':
             image = image.convert('RGB')
         
