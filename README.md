@@ -4,6 +4,9 @@ A powerful ComfyUI custom node that transforms AI-generated images into high-qua
 
 <img width="256" height="128" alt="demo2" src="https://github.com/user-attachments/assets/1084e266-d493-4744-9f9d-c5c6b4840472" />
 
+## Recommended LoRA:
+https://civitai.com/models/1631459/pixel-art-style-illustrious-by-skormino
+
 
 ## Features
 
