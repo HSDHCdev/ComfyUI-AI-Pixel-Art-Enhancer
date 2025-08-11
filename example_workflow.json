@@ -1,0 +1,297 @@
+{
+  "11": {
+    "inputs": {
+      "ckpt_name": "waiNSFWIllustrious_v140.safetensors",
+      "key_opt": "",
+      "mode": "Auto"
+    },
+    "class_type": "CheckpointLoaderSimpleShared //Inspire",
+    "_meta": {
+      "title": "Shared Checkpoint Loader (Inspire)"
+    }
+  },
+  "13": {
+    "inputs": {
+      "text": "1girl, cowboy shot, three quarter shot, pixel art, pixpix, swimsuit,\nfurry female, zebra, bull, horns, gradient fur, fusion,\n,masterpiece, best quality, amazing quality, ",
+      "clip": [
+        "42",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "14": {
+    "inputs": {
+      "text": "(umamusume), bad quality,worst quality,worst detail,sketch,censor,censor, text, (scenery:1.2), (frame), lifting skirt, (bottle), (multiple characters), helmet, sketch, text, logo, watermark, digit, multiple views, monochrome, magic staff",
+      "clip": [
+        "42",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "15": {
+    "inputs": {
+      "samples": [
+        "18",
+        0
+      ],
+      "vae": [
+        "16",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "16": {
+    "inputs": {
+      "vae_name": "sdxl_vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "18": {
+    "inputs": {
+      "seed": 273025470672614,
+      "steps": 24,
+      "cfg": 7,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": [
+        "42",
+        0
+      ],
+      "positive": [
+        "13",
+        0
+      ],
+      "negative": [
+        "14",
+        0
+      ],
+      "latent_image": [
+        "38",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "19": {
+    "inputs": {
+      "stop_at_clip_layer": -2,
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "CLIPSetLastLayer",
+    "_meta": {
+      "title": "CLIP Set Last Layer"
+    }
+  },
+  "38": {
+    "inputs": {
+      "width": 832,
+      "height": 1216,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "39": {
+    "inputs": {
+      "lora_name": "invisible.safetensors",
+      "strength_model": 0,
+      "strength_clip": 0,
+      "model": [
+        "11",
+        0
+      ],
+      "clip": [
+        "19",
+        0
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "42": {
+    "inputs": {
+      "lora_name": "[8-bit, pixel_art, pixpix, ]Pixel-Art Style v5 🔍(illustrious by Skormino).safetensors",
+      "strength_model": 0.8000000000000002,
+      "strength_clip": 0.8000000000000002,
+      "model": [
+        "39",
+        0
+      ],
+      "clip": [
+        "39",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "51": {
+    "inputs": {
+      "model_name": "sam_hq_vit_h (2.57GB)"
+    },
+    "class_type": "SAMModelLoader (segment anything)",
+    "_meta": {
+      "title": "SAMModelLoader (segment anything)"
+    }
+  },
+  "54": {
+    "inputs": {
+      "model_name": "GroundingDINO_SwinB (938MB)"
+    },
+    "class_type": "GroundingDinoModelLoader (segment anything)",
+    "_meta": {
+      "title": "GroundingDinoModelLoader (segment anything)"
+    }
+  },
+  "73": {
+    "inputs": {
+      "cache_info": "---- [String Key Caches] ----\nwaiNSFWIllustrious_v140.safetensors: ckpt\n\n---- [Number Key Caches] ----\n\n---- [TagCache Settings] ----\nckpt: 5\nlatent: 100\nimage: 100\n",
+      "key": "",
+      "Remove Key": null,
+      "Save Settings": null,
+      "Refresh": null,
+      "Clear": null
+    },
+    "class_type": "ShowCachedInfo //Inspire",
+    "_meta": {
+      "title": "Show Cached Info (Inspire)"
+    }
+  },
+  "74": {
+    "inputs": {
+      "grid_width": [
+        "76",
+        0
+      ],
+      "grid_height": [
+        "77",
+        0
+      ],
+      "conversion_method": "most_frequent",
+      "color_similarity_threshold": 35,
+      "output_scale": 4,
+      "enable_ai_enhancement": false,
+      "noise_reduction": 1,
+      "edge_enhancement": 0.5,
+      "color_quantization": 16,
+      "dithering_strength": 0,
+      "contrast_boost": 1.2000000000000002,
+      "saturation_boost": 1.2000000000000002,
+      "preserve_details": true,
+      "anti_aliasing": false,
+      "image": [
+        "15",
+        0
+      ]
+    },
+    "class_type": "AIPixelArtEnhancer",
+    "_meta": {
+      "title": "🎨 AI Pixel Art Enhancer"
+    }
+  },
+  "75": {
+    "inputs": {
+      "image": [
+        "15",
+        0
+      ]
+    },
+    "class_type": "GetImageSize+",
+    "_meta": {
+      "title": "🔧 Get Image Size"
+    }
+  },
+  "76": {
+    "inputs": {
+      "value": "a/8",
+      "a": [
+        "75",
+        0
+      ]
+    },
+    "class_type": "SimpleMath+",
+    "_meta": {
+      "title": "🔧 Simple Math"
+    }
+  },
+  "77": {
+    "inputs": {
+      "value": "b/8",
+      "b": [
+        "75",
+        1
+      ]
+    },
+    "class_type": "SimpleMath+",
+    "_meta": {
+      "title": "🔧 Simple Math"
+    }
+  },
+  "78": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "74",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "79": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "74",
+        1
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "80": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "15",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  }
+}
