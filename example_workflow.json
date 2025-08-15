@@ -63,7 +63,7 @@
   },
   "18": {
     "inputs": {
-      "seed": 273025470672614,
+      "seed": 353409886293001,
       "steps": 24,
       "cfg": 7,
       "sampler_name": "euler_ancestral",
@@ -153,38 +153,6 @@
       "title": "Load LoRA"
     }
   },
-  "51": {
-    "inputs": {
-      "model_name": "sam_hq_vit_h (2.57GB)"
-    },
-    "class_type": "SAMModelLoader (segment anything)",
-    "_meta": {
-      "title": "SAMModelLoader (segment anything)"
-    }
-  },
-  "54": {
-    "inputs": {
-      "model_name": "GroundingDINO_SwinB (938MB)"
-    },
-    "class_type": "GroundingDinoModelLoader (segment anything)",
-    "_meta": {
-      "title": "GroundingDinoModelLoader (segment anything)"
-    }
-  },
-  "73": {
-    "inputs": {
-      "cache_info": "---- [String Key Caches] ----\nwaiNSFWIllustrious_v140.safetensors: ckpt\n\n---- [Number Key Caches] ----\n\n---- [TagCache Settings] ----\nckpt: 5\nlatent: 100\nimage: 100\n",
-      "key": "",
-      "Remove Key": null,
-      "Save Settings": null,
-      "Refresh": null,
-      "Clear": null
-    },
-    "class_type": "ShowCachedInfo //Inspire",
-    "_meta": {
-      "title": "Show Cached Info (Inspire)"
-    }
-  },
   "74": {
     "inputs": {
       "grid_width": [
@@ -207,6 +175,7 @@
       "saturation_boost": 1.2000000000000002,
       "preserve_details": true,
       "anti_aliasing": false,
+      "batch_processing": true,
       "image": [
         "15",
         0
