@@ -335,51 +335,66 @@ class AIPixelArtEnhancer:
             return tuple(color.tolist() + [255])
     
     def get_most_frequent_color(self, pixels, similarity_threshold):
-        """Find most frequent color with clustering"""
+        """Find most frequent color with clustering using NumPy for safety"""
         if len(pixels) == 0:
             return None
+        
+        # Convert to numpy array and ensure proper dtype
+        pixels = np.array(pixels, dtype=np.float32)[:, :3]  # RGB only
         
         # Simple clustering based on color similarity
         clusters = []
         
         for pixel in pixels:
-            r, g, b = pixel[:3]
+            r, g, b = pixel[0], pixel[1], pixel[2]
             
             # Find matching cluster
             matched_cluster = None
+            min_distance = float('inf')
+            
             for cluster in clusters:
-                rep_r, rep_g, rep_b = cluster['representative'][:3]
-                distance = math.sqrt((r-rep_r)**2 + (g-rep_g)**2 + (b-rep_b)**2)
+                rep = np.array(cluster['representative'], dtype=np.float32)
+                current_pixel = np.array([r, g, b], dtype=np.float32)
                 
-                if distance <= similarity_threshold:
+                # Calculate Euclidean distance using NumPy
+                distance = np.linalg.norm(current_pixel - rep)
+                
+                if distance <= similarity_threshold and distance < min_distance:
                     matched_cluster = cluster
-                    break
+                    min_distance = distance
             
             if matched_cluster:
-                matched_cluster['pixels'].append(pixel)
+                # Add pixel to existing cluster
+                matched_cluster['pixels'].append([r, g, b])
                 matched_cluster['count'] += 1
-                # Update representative as weighted average
-                total = matched_cluster['count']
-                old_rep = matched_cluster['representative']
-                matched_cluster['representative'] = [
-                    int((old_rep[0] * (total-1) + r) / total),
-                    int((old_rep[1] * (total-1) + g) / total),
-                    int((old_rep[2] * (total-1) + b) / total)
-                ]
+                
+                # Update representative as running average using NumPy
+                pixels_array = np.array(matched_cluster['pixels'], dtype=np.float32)
+                new_representative = np.mean(pixels_array, axis=0)
+                
+                # Clamp to valid color range
+                matched_cluster['representative'] = np.clip(new_representative, 0, 255).astype(int).tolist()
             else:
+                # Create new cluster
                 clusters.append({
-                    'representative': [int(r), int(g), int(b)],
-                    'pixels': [pixel],
+                    'representative': [int(np.clip(r, 0, 255)), 
+                                    int(np.clip(g, 0, 255)), 
+                                    int(np.clip(b, 0, 255))],
+                    'pixels': [[r, g, b]],
                     'count': 1
                 })
         
         # Return color from largest cluster
         if clusters:
             largest_cluster = max(clusters, key=lambda x: x['count'])
-            return tuple(largest_cluster['representative'] + [255])
+            rep_color = largest_cluster['representative']
+            
+            # Ensure final color is valid
+            final_color = [int(np.clip(c, 0, 255)) for c in rep_color]
+            return tuple(final_color + [255])
         
         return None
-    
+        
     def get_neighbor_aware_color(self, pixels):
         """Get color using neighbor-aware sampling"""
         # For now, use weighted average with more weight on central pixels
