@@ -32,10 +32,8 @@ https://civitai.com/models/1631459/pixel-art-style-illustrious-by-skormino
    ```
 
 3. Install required dependencies:
-   ```bash
-   cd ai-pixel-art-enhancer
-   pip install -r requirements.txt
-   ```
+   cd ~\ComfyUI_windows_portable\python_embeded                                 #Actual path here
+   python.exe -m pip install torch numpy Pillow opencv-python scikit-learn      #If you have existing installations, you probably shouldn't reinstall them
 
 4. Restart ComfyUI
 
