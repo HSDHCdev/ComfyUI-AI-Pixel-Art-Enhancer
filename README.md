@@ -20,12 +20,7 @@ https://civitai.com/models/1631459/pixel-art-style-illustrious-by-skormino
 
 ## Installation
 
-### Method 1: ComfyUI Manager (Recommended)
-1. Install ComfyUI Manager if you haven't already
-2. Search for "AI Pixel Art Enhancer" in the manager
-3. Click Install and restart ComfyUI
-
-### Method 2: Manual Installation
+### Method 1: Manual Installation
 1. Navigate to your ComfyUI custom nodes directory:
    ```bash
    cd ComfyUI/custom_nodes/
