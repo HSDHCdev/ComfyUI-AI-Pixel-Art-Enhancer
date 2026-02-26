@@ -12,11 +12,12 @@ https://civitai.com/models/1631459/pixel-art-style-illustrious-by-skormino
 
 - **Multiple Conversion Methods**: Choose from 6 different pixel art conversion algorithms
 - **AI-Enhanced Processing**: Intelligent noise reduction, edge enhancement, and detail preservation
-- **Advanced Color Management**: Color quantization, similarity clustering, and brightness weighting
+- **Advanced Color Management**: Color quantization, similarity clustering, brightness weighting, and strict perfect-palette mapping
 - **Post-Processing Effects**: Dithering, anti-aliasing, and contrast/saturation adjustments
 - **Comparison Output**: Visual comparison grid showing original, pixel art, and final enhanced result
-- **Flexible Grid Sizing**: Support for various pixel art resolutions (8x8 to 256x256)
-- **Scalable Output**: Configurable output scaling (1x to 16x)
+- **Palette Extraction**: Extracts the precise colors used into a 32x32 unified swatch grid output
+- **Flexible Grain Sizing**: Choose exact pixel sizes for your grains while output resolution matches original
+- **Seamless Integrability**: No need to worry about strange dimensions, the node maintains input proportions flawlessly
 
 ## Installation
 
@@ -58,11 +59,9 @@ https://civitai.com/models/1631459/pixel-art-style-illustrious-by-skormino
 
 #### Required Parameters
 - **image**: Input image tensor
-- **grid_width** (8-256): Width of the pixel art grid
-- **grid_height** (8-256): Height of the pixel art grid
+- **pixel_size** (1-128): Size of each "grain" in pixels. Output resolution will match input exactly.
 - **conversion_method**: Algorithm used for pixel conversion
 - **color_similarity_threshold** (5.0-100.0): Threshold for color clustering
-- **output_scale** (1-16): Final output scaling factor
 
 #### Optional Enhancement Parameters
 - **enable_ai_enhancement** (Boolean): Enable AI preprocessing and post-processing
@@ -74,6 +73,7 @@ https://civitai.com/models/1631459/pixel-art-style-illustrious-by-skormino
 - **saturation_boost** (0.0-2.0): Color saturation multiplier
 - **preserve_details** (Boolean): Enable detail preservation during processing
 - **anti_aliasing** (Boolean): Apply subtle anti-aliasing to final output
+- **input_palette** (Image): Provide an image to strictly map the result to its exact colors. Overrides `color_quantization`.
 
 ## Conversion Methods
 
@@ -131,16 +131,17 @@ When `enable_ai_enhancement` is true, the node applies a sophisticated processin
 
 ## Output
 
-The node provides two outputs:
+The node provides three outputs:
 1. **Enhanced Image**: The final pixel art result at the specified scale
 2. **Comparison Grid**: Side-by-side comparison of original, intermediate, and final images
+3. **Palette**: A 32x32 block grid image showing all the exact colors used in the generated pixel art, sorted by hue.
 
 ## Tips and Best Practices
 
-### Grid Size Selection
-- **8x8 to 16x16**: Extreme pixelation, best for icons or very stylized art
-- **32x32 to 64x64**: Classic pixel art resolution, good balance of detail and style
-- **128x128+**: High-detail pixel art, maintains more original information
+### Grain Size Selection
+- **Small grains (1-4)**: High-detail pixel art, maintains more original information, classic modern indie game look
+- **Medium grains (8-16)**: Classic retro game aesthetic, good balance of detail and heavily stylized blocks
+- **Large grains (32+)**: Extreme abstract pixelation, best for simplistic icons or heavy block-colors
 
 ### Method Selection Guide
 - **Portraits**: Use "average" or "brightness_weighted_light"
@@ -149,7 +150,7 @@ The node provides two outputs:
 - **Artistic images**: Experiment with "brightness_weighted_dark" and dithering
 
 ### Performance Optimization
-- Larger grid sizes process faster but produce less pixelated results
+- Larger grain sizes process faster
 - Disable AI enhancement for faster processing on simple images
 - Use color quantization values appropriate to your target (16-64 colors typical)
 
@@ -158,14 +159,14 @@ The node provides two outputs:
 ### Basic Pixel Art Conversion
 ```
 Load Image → AI Pixel Art Enhancer → Save Image
-Settings: 32x32 grid, "most_frequent" method, 4x scale
+Settings: pixel_size=8, "most_frequent" method
 ```
 
 ### Enhanced Artistic Processing
 ```
 Load Image → AI Pixel Art Enhancer → Save Image
-Settings: 64x64 grid, "edge_preserving" method, AI enhancement enabled,
-          16 colors, 0.3 dithering, 6x scale
+Settings: pixel_size=4, "edge_preserving" method, AI enhancement enabled,
+          16 colors, 0.3 dithering
 ```
 
 ## Troubleshooting
@@ -193,6 +194,9 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 This project is licensed under the Apache 2.0. - see the LICENSE file for details.
 
 ## Changelog
+
+### v1.1.0
+- Added `k_means_vibrant_preserved` palette extraction method to preserve high-contrast, pure colors (like bright red eyes) during color quantization.
 
 ### v1.0.0
 - Initial release with 6 conversion methods
