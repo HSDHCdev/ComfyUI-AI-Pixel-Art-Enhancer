@@ -28,7 +28,7 @@ Documentation = "https://github.com/HSDHCdev/ComfyUI-AI-Pixel-Art-Enhancer/wiki"
 "Bug Tracker" = "https://github.com/HSDHCdev/ComfyUI-AI-Pixel-Art-Enhancer/issues"
 
 [tool.comfy]
-PublisherId = ""
+PublisherId = "hsdhcdev"
 DisplayName = "ComfyUI-AI-Pixel-Art-Enhancer"
 Icon = ""
 includes = [] 
